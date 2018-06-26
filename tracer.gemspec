@@ -3,12 +3,12 @@ require_relative "lib/tracer"
 Gem::Specification.new do |spec|
   spec.name          = "tracer"
   spec.version       = Tracer::VERSION
-  spec.authors       = ["SHIBATA Hiroshi"]
-  spec.email         = ["hsbt@ruby-lang.org"]
+  spec.authors       = ["Keiju ISHITSUKA"]
+  spec.email         = ["keiju@ruby-lang.org"]
 
-  spec.summary       = %q{TODO: Write a short summary, because RubyGems requires one.}
-  spec.description   = %q{TODO: Write a longer description or delete this line.}
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.summary       = %q{Outputs a source level execution trace of a Ruby program.}
+  spec.description   = %q{Outputs a source level execution trace of a Ruby program.}
+  spec.homepage      = "https://github.com/ruby/tracer"
   spec.license       = "BSD-2-Clause"
 
   # Specify which files should be added to the gem when it is released.
