@@ -1,4 +1,4 @@
-require_relative "lib/tracer"
+require_relative "lib/tracer/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "tracer"
@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.homepage      = "https://github.com/ruby/tracer"
   spec.license       = "BSD-2-Clause"
 
-  spec.files         = [".gitignore", ".travis.yml", "Gemfile", "LICENSE.txt", "README.md", "Rakefile", "bin/console", "bin/setup", "lib/tracer.rb", "tracer.gemspec"]
+  spec.files         = [".gitignore", ".travis.yml", "Gemfile", "LICENSE.txt", "README.md", "Rakefile", "bin/console", "bin/setup", "lib/tracer.rb", "lib/tracer/version.rb", "tracer.gemspec"]
   spec.bindir        = "exe"
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
