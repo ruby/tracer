@@ -1,4 +1,8 @@
-require_relative "lib/tracer/version"
+begin
+  require_relative "lib/tracer/version"
+rescue LoadError
+  require_relative "version"
+end
 
 Gem::Specification.new do |spec|
   spec.name          = "tracer"
