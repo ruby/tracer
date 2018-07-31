@@ -1,6 +1,7 @@
 begin
   require_relative "lib/tracer/version"
 rescue LoadError
+  # for Ruby core repository
   require_relative "version"
 end
 
