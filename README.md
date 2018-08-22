@@ -1,8 +1,8 @@
 # Tracer
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/tracer`. To experiment with that code, run `bin/console` for an interactive prompt.
+Outputs a source level execution trace of a Ruby program.
 
-TODO: Delete this and the text above, and describe your gem
+It does this by registering an event handler with Kernel#set_trace_func for processing incoming events.  It also provides methods for filtering unwanted trace output (see Tracer.add_filter, Tracer.on, and Tracer.off).
 
 ## Installation
 
@@ -22,7 +22,52 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Consider the following Ruby script
+
+```
+  class A
+    def square(a)
+      return a*a
+    end
+  end
+
+  a = A.new
+  a.square(5)
+```
+
+Running the above script using <code>ruby -r tracer example.rb</code> will output the following trace to STDOUT (Note you can also explicitly <code>require 'tracer'</code>)
+
+```
+  #0:<internal:lib/rubygems/custom_require>:38:Kernel:<: -
+  #0:example.rb:3::-: class A
+  #0:example.rb:3::C: class A
+  #0:example.rb:4::-:   def square(a)
+  #0:example.rb:7::E: end
+  #0:example.rb:9::-: a = A.new
+  #0:example.rb:10::-: a.square(5)
+  #0:example.rb:4:A:>:   def square(a)
+  #0:example.rb:5:A:-:     return a*a
+  #0:example.rb:6:A:<:   end
+   |  |         | |  |
+   |  |         | |   ---------------------+ event
+   |  |         |  ------------------------+ class
+   |  |          --------------------------+ line
+   |   ------------------------------------+ filename
+    ---------------------------------------+ thread
+```
+
+Symbol table used for displaying incoming events:
+
+```
++}+:: call a C-language routine
++{+:: return from a C-language routine
++>+:: call a Ruby method
++C+:: start a class or module definition
++E+:: finish a class or module definition
++-+:: execute code on a new line
++^+:: raise an exception
++<+:: return from a Ruby method
+```
 
 ## Development
 
