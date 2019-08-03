@@ -1,6 +1,8 @@
-sudo: false
 language: ruby
+
 rvm:
-  - 2.5.1
+  - 2.5.5
+  - 2.6.3
   - ruby-head
-before_install: gem install bundler -v 1.16.2
+
+script: rake test
