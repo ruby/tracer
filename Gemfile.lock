@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ruby-tracer (0.1.0)
+    ruby_tracer (0.1.0)
 
 GEM
   remote: https://rubygems.org/
@@ -16,7 +16,7 @@ PLATFORMS
 
 DEPENDENCIES
   rake (~> 13.0)
-  ruby-tracer!
+  ruby_tracer!
   test-unit (~> 3.0)
 
 BUNDLED WITH

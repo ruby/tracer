@@ -1,22 +1,22 @@
 # frozen_string_literal: true
 
-require_relative "lib/ruby/tracer/version"
+require_relative "lib/ruby_tracer/version"
 
 Gem::Specification.new do |spec|
-  spec.name = "ruby-tracer"
-  spec.version = Ruby::Tracer::VERSION
+  spec.name = "ruby_tracer"
+  spec.version = Tracer::VERSION
   spec.authors = ["Stan Lo"]
   spec.email = ["stan001212@gmail.com"]
 
   spec.summary = "A Ruby tracer"
   spec.description = "A Ruby tracer"
-  spec.homepage = "https://github.com/st0012/ruby-tracer"
+  spec.homepage = "https://github.com/st0012/ruby_tracer"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 2.7.0"
 
   spec.metadata["homepage_uri"] = spec.homepage
-  spec.metadata["source_code_uri"] = "https://github.com/st0012/ruby-tracer"
-  spec.metadata["changelog_uri"] = "https://github.com/st0012/ruby-tracer/blob/main/CHANGELOG.md"
+  spec.metadata["source_code_uri"] = "https://github.com/st0012/ruby_tracer"
+  spec.metadata["changelog_uri"] = "https://github.com/st0012/ruby_tracer/blob/main/CHANGELOG.md"
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
