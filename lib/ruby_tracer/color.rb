@@ -24,9 +24,9 @@ module Tracer
       end
     end
 
-    def colorize(str, seq)
+    def colorize(str, seq, colorize: @colorize)
       # don't colorize trace sent into a file
-      if @output.is_a?(File)
+      if @output.is_a?(File) || !colorize
         str
       else
         Color.colorize(str, seq)
