@@ -24,7 +24,7 @@ module Tracer
           obj.foo
         end
 
-        CallTracer.new(colorize: false).start
+        CallTracer.new.start
 
         bar(obj)
       RUBY

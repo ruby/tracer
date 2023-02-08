@@ -25,7 +25,7 @@ module Tracer
           obj.foo
         end
 
-        ObjectTracer.new(obj.object_id, obj.inspect, colorize: false).start
+        ObjectTracer.new(obj.object_id, obj.inspect).start
 
         bar(obj)
       RUBY
@@ -59,8 +59,7 @@ module Tracer
 
         ObjectTracer.new(
           Object.instance_method(:object_id).bind_call(obj),
-          Object.instance_method(:inspect).bind_call(obj),
-          colorize: false
+          Object.instance_method(:inspect).bind_call(obj)
         ).start
 
         bar(obj)

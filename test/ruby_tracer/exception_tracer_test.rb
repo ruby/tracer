@@ -14,7 +14,7 @@ module Tracer
   class ExceptionTracerIntegrationTest < IntegrationTestCase
     def test_exception_tracer_traces_exceptions
       file = write_file("foo.rb", <<~RUBY)
-        ExceptionTracer.new(colorize: false).start
+        ExceptionTracer.new.start
 
         raise "boom" rescue nil
       RUBY

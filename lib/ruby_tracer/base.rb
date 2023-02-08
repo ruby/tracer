@@ -72,7 +72,7 @@ module Tracer
       @name = self.class.name
       @type = @name.sub(/Tracer\z/, "")
       @output = output
-      @colorize = colorize
+      @colorize = colorize && colorizable?
 
       if pattern
         @pattern = Regexp.compile(pattern)
@@ -153,6 +153,11 @@ module Tracer
       else
         "#{klass}\##{tp.method_id}"
       end
+    end
+
+    def colorizable?
+      no_color = (nc = ENV["NO_COLOR"]).nil? || nc.empty?
+      @output.is_a?(IO) && @output.tty? && no_color
     end
   end
 end
