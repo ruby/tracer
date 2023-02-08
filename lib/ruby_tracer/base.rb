@@ -7,6 +7,7 @@ module Tracer
   class Base
     DIR = __dir__
     M_OBJECT_ID = method(:object_id).unbind
+    M_IS_A = method(:is_a?).unbind
     HOME = ENV["HOME"] ? (ENV["HOME"] + "/") : nil
 
     include Color

@@ -30,7 +30,7 @@ class ObjectTracer < Tracer::Base
         method = tp.method_id
         method_info =
           if klass.singleton_class?
-            if tp.self.is_a?(Class)
+            if M_IS_A.bind_call(tp.self, Class)
               ".#{method} (#{klass}.#{method})"
             else
               ".#{method}"
@@ -52,7 +52,7 @@ class ObjectTracer < Tracer::Base
 
           case type
           when :req, :opt, :key, :keyreq
-            if b.local_variable_get(name).object_id == @obj_id
+            if M_OBJECT_ID.bind_call(b.local_variable_get(name)) == @obj_id
               out tp,
                   " #{colorized_obj_inspect} is used as a parameter #{colorized_name} of #{method_info}"
             end
@@ -61,7 +61,7 @@ class ObjectTracer < Tracer::Base
 
             ary = b.local_variable_get(name)
             ary.each do |e|
-              if e.object_id == @obj_id
+              if M_OBJECT_ID.bind_call(e) == @obj_id
                 out tp,
                     " #{colorized_obj_inspect} is used as a parameter in #{colorized_name} of #{method_info}"
               end
@@ -70,7 +70,7 @@ class ObjectTracer < Tracer::Base
             next if name == :"**"
             h = b.local_variable_get(name)
             h.each do |k, e|
-              if e.object_id == @obj_id
+              if M_OBJECT_ID.bind_call(e) == @obj_id
                 out tp,
                     " #{colorized_obj_inspect} is used as a parameter in #{colorized_name} of #{method_info}"
               end

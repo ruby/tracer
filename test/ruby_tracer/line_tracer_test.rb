@@ -12,7 +12,7 @@ module Tracer
   end
 
   class LineTracerIntegrationTest < IntegrationTestCase
-    def test_line_tracer_traces_exceptions
+    def test_line_tracer_traces_line_executions
       file = write_file("foo.rb", <<~RUBY)
         LineTracer.new(colorize: false).start
 

@@ -12,7 +12,7 @@ module Tracer
   end
 
   class CallTracerIntegrationTest < IntegrationTestCase
-    def test_object_tracer_traces_exceptions
+    def test_object_tracer_traces_method_calls
       file = write_file("foo.rb", <<~RUBY)
         obj = Object.new
 
