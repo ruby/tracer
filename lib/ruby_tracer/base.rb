@@ -6,8 +6,9 @@ require_relative "color"
 module Tracer
   class Base
     DIR = __dir__
-    M_OBJECT_ID = method(:object_id).unbind
-    M_IS_A = method(:is_a?).unbind
+    M_OBJECT_ID = Object.instance_method(:object_id)
+    M_INSPECT = Object.instance_method(:inspect)
+    M_IS_A = Object.instance_method(:is_a?)
     HOME = ENV["HOME"] ? (ENV["HOME"] + "/") : nil
 
     include Color

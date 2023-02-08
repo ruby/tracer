@@ -3,29 +3,36 @@
 require_relative "base"
 
 class ObjectTracer < Tracer::Base
-  def initialize(obj_id, obj_inspect, **kw)
-    @obj_id = obj_id
-    @obj_inspect = obj_inspect
+  attr_reader :target_id, :target_label
+
+  def initialize(target = nil, target_id: nil, target_label: nil, **kw)
+    unless target || target_id
+      raise ArgumentError, "target or target_id is required"
+    end
+
+    @target_id = target_id || M_OBJECT_ID.bind_call(target)
+    @target_label =
+      (target ? M_INSPECT.bind_call(target) : target_label || "<unlabelled>")
     super(**kw)
   end
 
   def key
-    [@type, @obj_id, @pattern, @into].freeze
+    [@type, @target_id, @pattern, @into].freeze
   end
 
   def description
-    "for #{@obj_inspect} #{super}"
+    "for #{@target_label} #{super}"
   end
 
-  def colorized_obj_inspect
-    colorize_magenta(@obj_inspect)
+  def colorized_target_label
+    colorize_magenta(@target_label)
   end
 
   def setup_tp
     TracePoint.new(:a_call) do |tp|
       next if skip?(tp)
 
-      if M_OBJECT_ID.bind_call(tp.self) == @obj_id
+      if M_OBJECT_ID.bind_call(tp.self) == @target_id
         klass = tp.defined_class
         method = tp.method_id
         method_info =
@@ -40,7 +47,7 @@ class ObjectTracer < Tracer::Base
           end
 
         out tp,
-            " #{colorized_obj_inspect} receives #{colorize_blue(method_info)}"
+            " #{colorized_target_label} receives #{colorize_blue(method_info)}"
       elsif !tp.parameters.empty?
         b = tp.binding
         method_info = colorize_blue(minfo(tp))
@@ -52,27 +59,27 @@ class ObjectTracer < Tracer::Base
 
           case type
           when :req, :opt, :key, :keyreq
-            if M_OBJECT_ID.bind_call(b.local_variable_get(name)) == @obj_id
+            if M_OBJECT_ID.bind_call(b.local_variable_get(name)) == @target_id
               out tp,
-                  " #{colorized_obj_inspect} is used as a parameter #{colorized_name} of #{method_info}"
+                  " #{colorized_target_label} is used as a parameter #{colorized_name} of #{method_info}"
             end
           when :rest
             next if name == :"*"
 
             ary = b.local_variable_get(name)
             ary.each do |e|
-              if M_OBJECT_ID.bind_call(e) == @obj_id
+              if M_OBJECT_ID.bind_call(e) == @target_id
                 out tp,
-                    " #{colorized_obj_inspect} is used as a parameter in #{colorized_name} of #{method_info}"
+                    " #{colorized_target_label} is used as a parameter in #{colorized_name} of #{method_info}"
               end
             end
           when :keyrest
             next if name == :"**"
             h = b.local_variable_get(name)
             h.each do |k, e|
-              if M_OBJECT_ID.bind_call(e) == @obj_id
+              if M_OBJECT_ID.bind_call(e) == @target_id
                 out tp,
-                    " #{colorized_obj_inspect} is used as a parameter in #{colorized_name} of #{method_info}"
+                    " #{colorized_target_label} is used as a parameter in #{colorized_name} of #{method_info}"
               end
             end
           end
