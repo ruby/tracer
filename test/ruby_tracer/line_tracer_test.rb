@@ -24,9 +24,9 @@ module Tracer
 
       assert_empty(err)
       lines = out.strip.split("\n")
-      assert_equal(3, lines.size)
-      assert_match(/#depth:1  at .*foo.rb:3/, lines[1])
-      assert_match(/#depth:1  at .*foo.rb:4/, lines[2])
+      assert_equal(2, lines.size)
+      assert_match(/#depth:1  at .*foo.rb:3/, lines[0])
+      assert_match(/#depth:1  at .*foo.rb:4/, lines[1])
     end
   end
 end

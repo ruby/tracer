@@ -5,6 +5,7 @@ require_relative "color"
 
 module Tracer
   class Base
+    DIR = __dir__
     M_OBJECT_ID = method(:object_id).unbind
     HOME = ENV["HOME"] ? (ENV["HOME"] + "/") : nil
 
@@ -118,11 +119,15 @@ module Tracer
     end
 
     def skip?(tp)
-      skip_with_pattern?(tp)
+      skip_internal?(tp) || skip_with_pattern?(tp)
     end
 
     def skip_with_pattern?(tp)
       @pattern && !tp.path.match?(@pattern)
+    end
+
+    def skip_internal?(tp)
+      tp.path.match?(DIR)
     end
 
     def out(tp, msg = nil, depth = caller.size - 1)
