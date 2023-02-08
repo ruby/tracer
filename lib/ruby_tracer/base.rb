@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 require "pp"
-require_relative 'color'
+require_relative "color"
 
 module Tracer
   class Base
     M_OBJECT_ID = method(:object_id).unbind
-    HOME = ENV['HOME'] ? (ENV['HOME'] + '/') : nil
+    HOME = ENV["HOME"] ? (ENV["HOME"] + "/") : nil
 
     include Color
 
@@ -21,7 +21,7 @@ module Tracer
 
       attr_reader :buf
 
-      def initialize max
+      def initialize(max)
         @max = max
         @cnt = 0
         @buf = String.new
@@ -31,13 +31,13 @@ module Tracer
         @buf << other
 
         if @buf.size >= @max
-          @buf = @buf[0..@max] + '...'
+          @buf = @buf[0..@max] + "..."
           throw self
         end
       end
     end
 
-    def safe_inspect obj, max_length: 40
+    def safe_inspect(obj, max_length: 40)
       LimitedPP.pp(obj, max_length)
     rescue NoMethodError => e
       klass, oid = M_CLASS.bind_call(obj), M_OBJECT_ID.bind_call(obj)
@@ -51,18 +51,16 @@ module Tracer
       "<#inspect raises #{e.inspect}>"
     end
 
-    def pretty_path path
-      return '#<none>' unless path
+    def pretty_path(path)
+      return "#<none>" unless path
 
       case
-      when path.start_with?(dir = RbConfig::CONFIG["rubylibdir"] + '/')
-        path.sub(dir, '$(rubylibdir)/')
-      when Gem.path.any? do |gp|
-          path.start_with?(dir = gp + '/gems/')
-        end
-        path.sub(dir, '$(Gem)/')
+      when path.start_with?(dir = RbConfig::CONFIG["rubylibdir"] + "/")
+        path.sub(dir, "$(rubylibdir)/")
+      when Gem.path.any? { |gp| path.start_with?(dir = gp + "/gems/") }
+        path.sub(dir, "$(Gem)/")
       when HOME && path.start_with?(HOME)
-        path.sub(HOME, '~/')
+        path.sub(HOME, "~/")
       else
         path
       end
@@ -70,7 +68,7 @@ module Tracer
 
     def initialize(output: STDOUT, pattern: nil, colorize: true)
       @name = self.class.name
-      @type = @name.sub(/Tracer\z/, '')
+      @type = @name.sub(/Tracer\z/, "")
       @output = output
       @colorize = colorize
 
@@ -127,19 +125,19 @@ module Tracer
       @pattern && !tp.path.match?(@pattern)
     end
 
-    def out tp, msg = nil, depth = caller.size - 1
+    def out(tp, msg = nil, depth = caller.size - 1)
       location_str = colorize("#{pretty_path(tp.path)}:#{tp.lineno}", [:GREEN])
-      buff = "#{header} \#depth:#{'%-2d'%depth}#{msg} at #{location_str}"
+      buff = "#{header} \#depth:#{"%-2d" % depth}#{msg} at #{location_str}"
 
       puts buff
     end
 
-    def puts msg
+    def puts(msg)
       @output.puts msg
       @output.flush
     end
 
-    def minfo tp
+    def minfo(tp)
       return "block{}" if tp.event == :b_call
 
       klass = tp.defined_class

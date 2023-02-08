@@ -2,20 +2,20 @@
 
 module Tracer
   module Color
-    CLEAR     = 0
-    BOLD      = 1
+    CLEAR = 0
+    BOLD = 1
     UNDERLINE = 4
-    REVERSE   = 7
-    RED       = 31
-    GREEN     = 32
-    YELLOW    = 33
-    BLUE      = 34
-    MAGENTA   = 35
-    CYAN      = 36
+    REVERSE = 7
+    RED = 31
+    GREEN = 32
+    YELLOW = 33
+    BLUE = 34
+    MAGENTA = 35
+    CYAN = 36
 
     class << self
       def colorize(text, seq)
-        seq = seq.map { |s| "\e[#{const_get(s)}m" }.join('')
+        seq = seq.map { |s| "\e[#{const_get(s)}m" }.join("")
         "#{seq}#{text}#{clear}"
       end
 
@@ -33,17 +33,16 @@ module Tracer
       end
     end
 
-
     def colorize_cyan(str)
-      colorize(str, [:CYAN, :BOLD])
+      colorize(str, %i[CYAN BOLD])
     end
 
     def colorize_blue(str)
-      colorize(str, [:BLUE, :BOLD])
+      colorize(str, %i[BLUE BOLD])
     end
 
     def colorize_magenta(str)
-      colorize(str, [:MAGENTA, :BOLD])
+      colorize(str, %i[MAGENTA BOLD])
     end
   end
 end
