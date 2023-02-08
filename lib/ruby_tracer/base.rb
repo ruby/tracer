@@ -98,17 +98,25 @@ module Tracer
     end
 
     def description
-      "(#{@tp.enabled? ? 'enabled' : 'disabled'})"
+      "(#{@tp.enabled? ? "enabled" : "disabled"})"
     end
 
-    def enable
+    def start
       puts "PID:#{Process.pid} #{self}" if @output.is_a?(File)
       @tp.enable
       self
     end
 
-    def disable
+    def stop
       @tp.disable
+    end
+
+    def started?
+      @tp.enabled?
+    end
+
+    def stopped?
+      !started?
     end
 
     def skip?(tp)
