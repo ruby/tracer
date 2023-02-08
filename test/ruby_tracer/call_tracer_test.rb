@@ -1,13 +1,13 @@
 require_relative "../test_helper"
 
 module Tracer
-  class CallTracerTest < Test::Unit::TestCase
+  class CallTracerTest < TestCase
     include ActivationTests
 
     private
 
     def build_tracer
-      CallTracer.new
+      CallTracer.new(output: @output)
     end
   end
 end

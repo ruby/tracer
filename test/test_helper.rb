@@ -4,8 +4,15 @@ $LOAD_PATH.unshift File.expand_path("../lib", __dir__)
 require "ruby_tracer"
 
 require "test-unit"
+require "stringio"
 
 module Tracer
+  class TestCase < Test::Unit::TestCase
+    def setup
+      @output = StringIO.new
+    end
+  end
+
   module ActivationTests
     def test_exception_tracer_can_be_started_and_stopped
       tracer = build_tracer
