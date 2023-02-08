@@ -45,7 +45,7 @@ module Tracer
         bar(obj)
       RUBY
 
-      out, err, status = execute_file(file)
+      out, err = execute_file(file)
 
       assert_empty(err)
       lines = out.strip.split("\n")
@@ -77,7 +77,7 @@ module Tracer
         bar(obj)
       RUBY
 
-      out, err, status = execute_file(file)
+      out, err = execute_file(file)
 
       assert_empty(err)
       lines = out.strip.split("\n")
@@ -109,7 +109,7 @@ module Tracer
         bar(obj)
       RUBY
 
-      out, err, status = execute_file(file)
+      out, err = execute_file(file)
 
       assert_empty(err)
       lines = out.strip.split("\n")

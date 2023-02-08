@@ -41,6 +41,10 @@ module Tracer
       cmd = [EnvUtil.rubybin, "-I", LIB, "-rruby_tracer", file.to_path]
 
       stdout, stderr, status = Open3.capture3(*cmd, chdir: @dir)
+
+      assert_equal(0, status)
+
+      [stdout, stderr]
     ensure
       File.unlink(file)
     end
