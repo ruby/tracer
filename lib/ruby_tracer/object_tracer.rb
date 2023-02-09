@@ -43,15 +43,24 @@ class ObjectTracer < Tracer::Base
         klass = tp.defined_class
         method = tp.method_id
         method_info =
-          if klass.singleton_class?
-            if M_IS_A.bind_call(tp.self, Class)
-              ".#{method} (#{klass}.#{method})"
+          method_info =
+            if klass
+              if klass.singleton_class?
+                if M_IS_A.bind_call(tp.self, Class)
+                  ".#{method} (#{klass}.#{method})"
+                else
+                  ".#{method}"
+                end
+              else
+                "##{method} (#{klass}##{method})"
+              end
             else
-              ".#{method}"
+              if method
+                "##{method} (<unknown>##{method})"
+              else
+                "<eval or exec with &block>"
+              end
             end
-          else
-            "##{method} (#{klass}##{method})"
-          end
 
         out tp,
             " #{colorized_target_label} receives #{colorize_blue(method_info)}",

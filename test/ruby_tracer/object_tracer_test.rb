@@ -161,6 +161,26 @@ module Tracer
       assert_traces([], out)
     end
 
+    def test_object_tracer_works_with_nil_defined_class
+      file = write_file("foo.rb", <<~RUBY)
+        obj = Object.new
+        ObjectTracer.new(obj).start
+
+        obj.instance_eval(&proc {})
+      RUBY
+
+      out, err = execute_file(file)
+
+      assert_empty(err)
+      assert_traces(
+        [
+          /#depth:-1 #<Object:.*> receives #instance_eval \(BasicObject#instance_eval\) at .*foo\.rb:4/,
+          /#depth:1  #<Object:.*> receives <eval or exec with &block> at .*foo.rb:4:in `instance_eval'/
+        ],
+        out
+      )
+    end
+
     def test_object_tracer_works_with_basic_object
       file = write_file("foo.rb", <<~RUBY)
         obj = BasicObject.new
