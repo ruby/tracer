@@ -80,10 +80,15 @@ module Tracer
 
       assert_equal(false, tracer.started?)
 
-      tracer.start { in_block_state = tracer.started? }
+      result =
+        tracer.start do
+          in_block_state = tracer.started?
+          "foo"
+        end
 
       assert_equal(true, in_block_state)
       assert_equal(false, tracer.started?)
+      assert_equal("foo", result)
     end
   end
 end
