@@ -33,6 +33,7 @@ class ObjectTracer < Tracer::Base
       next if skip?(tp)
 
       if M_OBJECT_ID.bind_call(tp.self) == @target_id
+        internal_depth = 2
         klass = tp.defined_class
         method = tp.method_id
         method_info =
@@ -48,7 +49,8 @@ class ObjectTracer < Tracer::Base
 
         out tp,
             " #{colorized_target_label} receives #{colorize_blue(method_info)}",
-            location: caller_locations(2, 1).first
+            location: caller_locations(internal_depth, 1).first,
+            depth: caller.size - internal_depth
       elsif !tp.parameters.empty?
         b = tp.binding
         method_info = colorize_blue(minfo(tp))
@@ -61,29 +63,35 @@ class ObjectTracer < Tracer::Base
           case type
           when :req, :opt, :key, :keyreq
             if M_OBJECT_ID.bind_call(b.local_variable_get(name)) == @target_id
+              internal_depth = 4
               out tp,
                   " #{colorized_target_label} is used as a parameter #{colorized_name} of #{method_info}",
-                  location: caller_locations(4, 1).first
+                  location: caller_locations(internal_depth, 1).first,
+                  depth: caller.size - internal_depth
             end
           when :rest
             next if name == :"*"
 
+            internal_depth = 6
             ary = b.local_variable_get(name)
             ary.each do |e|
               if M_OBJECT_ID.bind_call(e) == @target_id
                 out tp,
                     " #{colorized_target_label} is used as a parameter in #{colorized_name} of #{method_info}",
-                    location: caller_locations(6, 1).first
+                    location: caller_locations(internal_depth, 1).first,
+                    depth: caller.size - internal_depth
               end
             end
           when :keyrest
             next if name == :"**"
+            internal_depth = 6
             h = b.local_variable_get(name)
             h.each do |k, e|
               if M_OBJECT_ID.bind_call(e) == @target_id
                 out tp,
                     " #{colorized_target_label} is used as a parameter in #{colorized_name} of #{method_info}",
-                    location: caller_locations(6, 1).first
+                    location: caller_locations(internal_depth, 1).first,
+                    depth: caller.size - internal_depth
               end
             end
           end

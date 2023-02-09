@@ -132,7 +132,7 @@ module Tracer
       tp.path.match?(DIR)
     end
 
-    def out(tp, msg = nil, depth = caller.size - 1, location: nil)
+    def out(tp, msg = nil, depth: caller.size - 1, location: nil)
       location ||= "#{tp.path}:#{tp.lineno}"
       buff =
         "#{header} \#depth:#{"%-2d" % depth}#{msg} at #{colorize("#{location}", [:GREEN])}"

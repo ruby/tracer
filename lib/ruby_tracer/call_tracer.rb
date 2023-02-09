@@ -17,12 +17,12 @@ class CallTracer < Tracer::Base
       when :call, :c_call, :b_call
         depth += 1 if tp.event == :c_call
         sp = " " * depth
-        out tp, ">#{sp}#{call_identifier_str}", depth
+        out tp, ">#{sp}#{call_identifier_str}", depth: depth
       when :return, :c_return, :b_return
         depth += 1 if tp.event == :c_return
         sp = " " * depth
         return_str = colorize_magenta(safe_inspect(tp.return_value))
-        out tp, "<#{sp}#{call_identifier_str} #=> #{return_str}", depth
+        out tp, "<#{sp}#{call_identifier_str} #=> #{return_str}", depth: depth
       end
     end
   end

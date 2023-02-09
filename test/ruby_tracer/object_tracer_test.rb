@@ -51,11 +51,11 @@ module Tracer
       lines = out.strip.split("\n")
       assert_equal(2, lines.size)
       assert_match(
-        %r{#depth:4  #<Object:.*> is used as a parameter obj of Object#bar at .*/foo\.rb:13},
+        %r{#depth:0  #<Object:.*> is used as a parameter obj of Object#bar at .*/foo\.rb:13},
         lines.first
       )
       assert_match(
-        %r{#depth:3  #<Object:.*> receives \.foo at .*/foo\.rb:8},
+        %r{#depth:1  #<Object:.*> receives \.foo at .*/foo\.rb:8},
         lines.last
       )
     end
@@ -82,12 +82,50 @@ module Tracer
       lines = out.strip.split("\n")
       assert_equal(2, lines.size)
       assert_match(
-        %r{#depth:6  #<Object:.*> is used as a parameter in args of Object#foo at .*/foo\.rb:11},
+        %r{#depth:0  #<Object:.*> is used as a parameter in args of Object#foo at .*/foo\.rb:11},
         lines.first
       )
       assert_match(
-        %r{#depth:6  #<Object:.*> is used as a parameter in kwargs of Object#bar at .*/foo\.rb:12},
+        %r{#depth:0  #<Object:.*> is used as a parameter in kwargs of Object#bar at .*/foo\.rb:12},
         lines.last
+      )
+    end
+
+    def test_object_tracer_calculates_depth_correctly
+      file = write_file("foo.rb", <<~RUBY)
+        obj = Object.new
+
+        def foo(*args)
+          yield args.first
+        end
+
+        def bar(**kwargs)
+        end
+
+        ObjectTracer.new(obj).start
+
+        foo(obj) do |obj|
+          bar(obj: obj)
+        end
+      RUBY
+
+      out, err = execute_file(file)
+
+      assert_empty(err)
+      lines = out.strip.split("\n")
+      assert_equal(3, lines.size)
+      assert_match(
+        %r{#depth:0  #<Object:.*> is used as a parameter in args of Object#foo at .*/foo\.rb:12},
+        lines[0]
+      )
+
+      assert_match(
+        %r{#depth:1  #<Object:.*> is used as a parameter obj of block{} at .*/foo\.rb:4},
+        lines[1]
+      )
+      assert_match(
+        %r{#depth:2  #<Object:.*> is used as a parameter in kwargs of Object#bar at .*/foo\.rb:13},
+        lines[2]
       )
     end
 
@@ -114,11 +152,11 @@ module Tracer
       lines = out.strip.split("\n")
       assert_equal(2, lines.size)
       assert_match(
-        %r{#depth:4  #<Object:.*> is used as a parameter obj of Object#bar at .*/foo\.rb:13},
+        %r{#depth:0  #<Object:.*> is used as a parameter obj of Object#bar at .*/foo\.rb:13},
         lines.first
       )
       assert_match(
-        %r{#depth:3  #<Object:.*> receives \.foo at .*/foo\.rb:8},
+        %r{#depth:1  #<Object:.*> receives \.foo at .*/foo\.rb:8},
         lines.last
       )
     end
@@ -146,11 +184,11 @@ module Tracer
       lines = out.strip.split("\n")
       assert_equal(2, lines.size)
       assert_match(
-        %r{#depth:4  #<BasicObject:.*> is used as a parameter obj of Object#bar at .*/foo\.rb:13},
+        %r{#depth:0  #<BasicObject:.*> is used as a parameter obj of Object#bar at .*/foo\.rb:13},
         lines.first
       )
       assert_match(
-        %r{#depth:3  #<BasicObject:.*> receives \.foo at .*/foo\.rb:8},
+        %r{#depth:1  #<BasicObject:.*> receives \.foo at .*/foo\.rb:8},
         lines.last
       )
     end
