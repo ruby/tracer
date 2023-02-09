@@ -70,11 +70,11 @@ module Tracer
       end
     end
 
-    def initialize(output: STDOUT, pattern: nil, colorize: true)
+    def initialize(output: STDOUT, pattern: nil, colorize: nil)
       @name = self.class.name
       @type = @name.sub(/Tracer\z/, "")
       @output = output
-      @colorize = colorize && colorizable?
+      @colorize = colorize || colorizable?
 
       if pattern
         @pattern = Regexp.compile(pattern)
