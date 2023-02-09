@@ -12,7 +12,7 @@ class ObjectTracer < Tracer::Base
 
     @target_id = target_id || M_OBJECT_ID.bind_call(target)
     @target_label =
-      (target ? M_INSPECT.bind_call(target) : target_label || "<unlabelled>")
+      (target ? safe_inspect(target) : target_label || "<unlabelled>")
     super(**kw)
   end
 

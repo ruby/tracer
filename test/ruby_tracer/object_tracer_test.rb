@@ -167,8 +167,8 @@ module Tracer
       assert_empty(err)
       assert_traces(
         [
-          %r{#depth:0  #<BasicObject:.*> is used as a parameter obj of Object#bar at .*/foo\.rb:13},
-          %r{#depth:1  #<BasicObject:.*> receives \.foo at .*/foo\.rb:8}
+          %r{#depth:0  #<BasicObject.* does not have #inspect> is used as a parameter obj of Object#bar at .*/foo\.rb:13},
+          %r{#depth:1  #<BasicObject.* does not have #inspect> receives \.foo at .*/foo\.rb:8}
         ],
         out
       )

@@ -55,7 +55,7 @@ module Tracer
 
       stdout, stderr, status = Open3.capture3(*cmd, chdir: @dir)
 
-      assert_equal(0, status)
+      assert_equal(0, status, stderr)
 
       [stdout, stderr]
     ensure

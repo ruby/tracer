@@ -8,6 +8,7 @@ module Tracer
     DIR = __dir__
     M_OBJECT_ID = Object.instance_method(:object_id)
     M_INSPECT = Object.instance_method(:inspect)
+    M_CLASS = Object.instance_method(:class)
     M_IS_A = Object.instance_method(:is_a?)
     HOME = ENV["HOME"] ? (ENV["HOME"] + "/") : nil
 
@@ -45,10 +46,10 @@ module Tracer
     rescue NoMethodError => e
       klass, oid = M_CLASS.bind_call(obj), M_OBJECT_ID.bind_call(obj)
       if obj == (r = e.receiver)
-        "<\##{klass.name}#{oid} does not have \#inspect>"
+        "#<#{klass.name}#{oid} does not have \#inspect>"
       else
         rklass, roid = M_CLASS.bind_call(r), M_OBJECT_ID.bind_call(r)
-        "<\##{klass.name}:#{roid} contains <\##{rklass}:#{roid} and it does not have #inspect>"
+        "#<#{klass.name}:#{roid} contains #<#{rklass}:#{roid} and it does not have #inspect>"
       end
     rescue Exception => e
       "<#inspect raises #{e.inspect}>"
