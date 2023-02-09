@@ -145,6 +145,22 @@ module Tracer
       )
     end
 
+    def test_object_tracer_skips_primitive_methods
+      file = write_file("foo.rb", <<~RUBY)
+        obj = Object.new
+
+        obj.to_s
+        obj.respond_to?(:to_s)
+
+        ObjectTracer.new(obj).start
+      RUBY
+
+      out, err = execute_file(file)
+
+      assert_empty(err)
+      assert_traces([], out)
+    end
+
     def test_object_tracer_works_with_basic_object
       file = write_file("foo.rb", <<~RUBY)
         obj = BasicObject.new

@@ -28,11 +28,17 @@ class ObjectTracer < Tracer::Base
     colorize_magenta(@target_label)
   end
 
+  PRIMITIVE_METHOD_SOURCES = [Module, Class, Object, Kernel]
+
   def setup_tp
     TracePoint.new(:a_call) do |tp|
       next if skip?(tp)
 
       if M_OBJECT_ID.bind_call(tp.self) == @target_id
+        if PRIMITIVE_METHOD_SOURCES.any? { |klass| klass == tp.defined_class }
+          next
+        end
+
         internal_depth = 2
         klass = tp.defined_class
         method = tp.method_id
