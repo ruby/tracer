@@ -28,6 +28,19 @@ module Tracer
       FileUtils.remove_entry @dir
     end
 
+    def assert_traces(expected_lines, out)
+      lines = out.strip.split("\n")
+      assert_equal(
+        expected_lines.count,
+        lines.size,
+        "Expected #{expected_lines.count} lines, got #{lines.size}:\n#{lines.join("\n")}"
+      )
+
+      expected_lines.each_with_index do |expected_line, index|
+        assert_match(expected_line, lines[index])
+      end
+    end
+
     private
 
     def write_file(name, content)

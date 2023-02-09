@@ -22,9 +22,7 @@ module Tracer
       out, err, status = execute_file(file)
 
       assert_empty(err)
-      lines = out.strip.split("\n")
-      assert_equal(1, lines.size)
-      assert_match(/depth:1  #<RuntimeError: boom> at .*foo.rb:3/, lines.first)
+      assert_traces([/#depth:1  #<RuntimeError: boom> at .*foo.rb:3/], out)
     end
   end
 end

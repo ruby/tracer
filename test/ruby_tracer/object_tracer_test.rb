@@ -48,15 +48,12 @@ module Tracer
       out, err = execute_file(file)
 
       assert_empty(err)
-      lines = out.strip.split("\n")
-      assert_equal(2, lines.size)
-      assert_match(
-        %r{#depth:0  #<Object:.*> is used as a parameter obj of Object#bar at .*/foo\.rb:13},
-        lines.first
-      )
-      assert_match(
-        %r{#depth:1  #<Object:.*> receives \.foo at .*/foo\.rb:8},
-        lines.last
+      assert_traces(
+        [
+          %r{#depth:0  #<Object:.*> is used as a parameter obj of Object#bar at .*/foo\.rb:13},
+          %r{#depth:1  #<Object:.*> receives \.foo at .*/foo\.rb:8}
+        ],
+        out
       )
     end
 
@@ -79,15 +76,12 @@ module Tracer
       out, err = execute_file(file)
 
       assert_empty(err)
-      lines = out.strip.split("\n")
-      assert_equal(2, lines.size)
-      assert_match(
-        %r{#depth:0  #<Object:.*> is used as a parameter in args of Object#foo at .*/foo\.rb:11},
-        lines.first
-      )
-      assert_match(
-        %r{#depth:0  #<Object:.*> is used as a parameter in kwargs of Object#bar at .*/foo\.rb:12},
-        lines.last
+      assert_traces(
+        [
+          %r{#depth:0  #<Object:.*> is used as a parameter in args of Object#foo at .*/foo\.rb:11},
+          %r{#depth:0  #<Object:.*> is used as a parameter in kwargs of Object#bar at .*/foo\.rb:12}
+        ],
+        out
       )
     end
 
@@ -112,20 +106,13 @@ module Tracer
       out, err = execute_file(file)
 
       assert_empty(err)
-      lines = out.strip.split("\n")
-      assert_equal(3, lines.size)
-      assert_match(
-        %r{#depth:0  #<Object:.*> is used as a parameter in args of Object#foo at .*/foo\.rb:12},
-        lines[0]
-      )
-
-      assert_match(
-        %r{#depth:1  #<Object:.*> is used as a parameter obj of block{} at .*/foo\.rb:4},
-        lines[1]
-      )
-      assert_match(
-        %r{#depth:2  #<Object:.*> is used as a parameter in kwargs of Object#bar at .*/foo\.rb:13},
-        lines[2]
+      assert_traces(
+        [
+          %r{#depth:0  #<Object:.*> is used as a parameter in args of Object#foo at .*/foo\.rb:12},
+          %r{#depth:1  #<Object:.*> is used as a parameter obj of block{} at .*/foo\.rb:4},
+          %r{#depth:2  #<Object:.*> is used as a parameter in kwargs of Object#bar at .*/foo\.rb:13}
+        ],
+        out
       )
     end
 
@@ -149,15 +136,12 @@ module Tracer
       out, err = execute_file(file)
 
       assert_empty(err)
-      lines = out.strip.split("\n")
-      assert_equal(2, lines.size)
-      assert_match(
-        %r{#depth:0  #<Object:.*> is used as a parameter obj of Object#bar at .*/foo\.rb:13},
-        lines.first
-      )
-      assert_match(
-        %r{#depth:1  #<Object:.*> receives \.foo at .*/foo\.rb:8},
-        lines.last
+      assert_traces(
+        [
+          %r{#depth:0  #<Object:.*> is used as a parameter obj of Object#bar at .*/foo\.rb:13},
+          %r{#depth:1  #<Object:.*> receives \.foo at .*/foo\.rb:8}
+        ],
+        out
       )
     end
 
@@ -181,15 +165,12 @@ module Tracer
       out, err = execute_file(file)
 
       assert_empty(err)
-      lines = out.strip.split("\n")
-      assert_equal(2, lines.size)
-      assert_match(
-        %r{#depth:0  #<BasicObject:.*> is used as a parameter obj of Object#bar at .*/foo\.rb:13},
-        lines.first
-      )
-      assert_match(
-        %r{#depth:1  #<BasicObject:.*> receives \.foo at .*/foo\.rb:8},
-        lines.last
+      assert_traces(
+        [
+          %r{#depth:0  #<BasicObject:.*> is used as a parameter obj of Object#bar at .*/foo\.rb:13},
+          %r{#depth:1  #<BasicObject:.*> receives \.foo at .*/foo\.rb:8}
+        ],
+        out
       )
     end
   end
