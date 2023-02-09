@@ -47,7 +47,8 @@ class ObjectTracer < Tracer::Base
           end
 
         out tp,
-            " #{colorized_target_label} receives #{colorize_blue(method_info)}"
+            " #{colorized_target_label} receives #{colorize_blue(method_info)}",
+            location: caller_locations(2, 1).first
       elsif !tp.parameters.empty?
         b = tp.binding
         method_info = colorize_blue(minfo(tp))
@@ -61,7 +62,8 @@ class ObjectTracer < Tracer::Base
           when :req, :opt, :key, :keyreq
             if M_OBJECT_ID.bind_call(b.local_variable_get(name)) == @target_id
               out tp,
-                  " #{colorized_target_label} is used as a parameter #{colorized_name} of #{method_info}"
+                  " #{colorized_target_label} is used as a parameter #{colorized_name} of #{method_info}",
+                  location: caller_locations(4, 1).first
             end
           when :rest
             next if name == :"*"
@@ -70,7 +72,8 @@ class ObjectTracer < Tracer::Base
             ary.each do |e|
               if M_OBJECT_ID.bind_call(e) == @target_id
                 out tp,
-                    " #{colorized_target_label} is used as a parameter in #{colorized_name} of #{method_info}"
+                    " #{colorized_target_label} is used as a parameter in #{colorized_name} of #{method_info}",
+                    location: caller_locations(6, 1).first
               end
             end
           when :keyrest
@@ -79,7 +82,8 @@ class ObjectTracer < Tracer::Base
             h.each do |k, e|
               if M_OBJECT_ID.bind_call(e) == @target_id
                 out tp,
-                    " #{colorized_target_label} is used as a parameter in #{colorized_name} of #{method_info}"
+                    " #{colorized_target_label} is used as a parameter in #{colorized_name} of #{method_info}",
+                    location: caller_locations(6, 1).first
               end
             end
           end
