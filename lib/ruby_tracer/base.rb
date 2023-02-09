@@ -103,9 +103,11 @@ module Tracer
       "(#{@tp.enabled? ? "enabled" : "disabled"})"
     end
 
-    def start
+    def start(&block)
       puts "PID:#{Process.pid} #{self}" if @output.is_a?(File)
-      @tp.enable
+
+      block ? @tp.enable(&block) : @tp.enable
+
       self
     end
 

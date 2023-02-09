@@ -64,7 +64,7 @@ module Tracer
   end
 
   module ActivationTests
-    def test_exception_tracer_can_be_started_and_stopped
+    def test_tracer_can_be_started_and_stopped
       tracer = build_tracer
       tracer.start
       assert_equal(true, tracer.started?)
@@ -72,6 +72,18 @@ module Tracer
       tracer.stop
       assert_equal(false, tracer.started?)
       assert_equal(true, tracer.stopped?)
+    end
+
+    def test_supports_block_format
+      in_block_state = nil
+      tracer = build_tracer
+
+      assert_equal(false, tracer.started?)
+
+      tracer.start { in_block_state = tracer.started? }
+
+      assert_equal(true, in_block_state)
+      assert_equal(false, tracer.started?)
     end
   end
 end
