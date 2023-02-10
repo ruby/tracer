@@ -34,10 +34,10 @@ module Tracer
       assert_empty(err)
       assert_traces(
         [
-          %r{#depth:2 >  Object#bar at .*/foo\.rb:7},
-          %r{#depth:3 >   #<Object:.*>\.foo at .*/foo\.rb:3},
-          %r{#depth:3 <   #<Object:.*>\.foo #=> 100 at .*/foo\.rb:5},
-          %r{#depth:2 <  Object#bar #=> 100 at .*/foo\.rb:9}
+          %r{#depth:0 >  Object#bar at .*/foo\.rb:13},
+          %r{#depth:1 >   #<Object:.*>\.foo at .*/foo\.rb:8},
+          %r{#depth:1 <   #<Object:.*>\.foo #=> 100 at .*/foo\.rb:8},
+          %r{#depth:0 <  Object#bar #=> 100 at .*/foo\.rb:13}
         ],
         out
       )

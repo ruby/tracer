@@ -8,6 +8,7 @@ class CallTracer < Tracer::Base
       next if skip?(tp)
 
       depth = caller.size
+      internal_depth = 2
 
       call_identifier_str = (tp.defined_class ? minfo(tp) : "block")
 
@@ -17,12 +18,18 @@ class CallTracer < Tracer::Base
       when :call, :c_call, :b_call
         depth += 1 if tp.event == :c_call
         sp = " " * depth
-        out tp, ">#{sp}#{call_identifier_str}", depth: depth
+        out tp,
+            ">#{sp}#{call_identifier_str}",
+            depth: depth - 2 - @depth_offset,
+            location: caller_locations(internal_depth, 1).first
       when :return, :c_return, :b_return
         depth += 1 if tp.event == :c_return
         sp = " " * depth
         return_str = colorize_magenta(safe_inspect(tp.return_value))
-        out tp, "<#{sp}#{call_identifier_str} #=> #{return_str}", depth: depth
+        out tp,
+            "<#{sp}#{call_identifier_str} #=> #{return_str}",
+            depth: depth - 2 - @depth_offset,
+            location: caller_locations(internal_depth, 1).first
       end
     end
   end
