@@ -11,7 +11,7 @@ module Tracer
         end
       RUBY
 
-      out, err, status = execute_file(file)
+      out, err = execute_file(file)
 
       assert_empty(err)
       assert_traces([/#depth:1  #<RuntimeError: boom> at .*foo.rb:4/], out)
@@ -36,7 +36,7 @@ module Tracer
         end
       RUBY
 
-      out, err, status = execute_file(file)
+      out, err = execute_file(file)
 
       assert_empty(err)
       assert_traces(
@@ -69,7 +69,7 @@ module Tracer
         end
       RUBY
 
-      out, err, status = execute_file(file)
+      out, err = execute_file(file)
 
       assert_empty(err)
       assert_traces(
