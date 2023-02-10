@@ -24,18 +24,16 @@ $ gem install ruby_tracer
 
 ## Usage
 
-### `ruby_tracer/helper`
+```rb
+Tracer.trace(object) { ... } # trace object's activities in the given block
+Tracer.trace_call { ... } # trace method calls in the given block
+Tracer.trace_exception { ... } # trace exceptions in the given block
+```
 
-This gem tries to provide the simpliest APIs for tracing, such us:
-
-- `trace(object) { ... }`
-- `trace_call { ... }`
-- `trace_exception { ... }`
-
-You can access the through `require "ruby_tracer/helper"`:
+**Example**
 
 ```rb
-require "ruby_tracer/helper"
+require "ruby_tracer"
 
 obj = Object.new
 
@@ -47,15 +45,24 @@ def bar(obj)
   obj.foo
 end
 
-trace(obj) do
-  bar(obj)
-end
-
- #depth:1  #<Object:0x00000001061cfbe0> is used as a parameter obj of Object#bar at test.rb:13:in `block in <main>'
- #depth:2  #<Object:0x00000001061cfbe0> receives .foo at test.rb:10:in `bar'
+Tracer.trace(obj) { bar(obj) }
+ #depth:1  #<Object:0x000000010903c190> is used as a parameter obj of Object#bar at test.rb:13:in `block in <main>'
+ #depth:2  #<Object:0x000000010903c190> receives .foo at test.rb:10:in `bar'
 ```
 
-If you don't want to pollute the top-level namespace, or want to have more control over individual traces, you can use individual tracer classes:
+### `ruby_tracer/helper`
+
+If you want to avoid the `Tracer` namespace, you can do `require "ruby_tracer/helper"` instead:
+
+```rb
+require "ruby_tracer/helper"
+
+trace(object) { ... } # trace object's activities in the given block
+trace_call { ... } # trace method calls in the given block
+trace_exception { ... } # trace exceptions in the given block
+```
+
+If you want to have more control over individual traces, you can use individual tracer classes:
 
 ### ObjectTracer
 
