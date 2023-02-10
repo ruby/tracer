@@ -9,7 +9,9 @@ class ExceptionTracer < Tracer::Base
 
       exc = tp.raised_exception
 
-      out tp, " #{colorize_magenta(exc.inspect)}"
+      out tp,
+          " #{colorize_magenta(exc.inspect)}",
+          depth: caller.size - (1 + @depth_offset)
     rescue Exception => e
       p e
     end

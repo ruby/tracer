@@ -22,7 +22,7 @@ module Tracer
       out, err, status = execute_file(file)
 
       assert_empty(err)
-      assert_traces([/#depth:1  #<RuntimeError: boom> at .*foo.rb:3/], out)
+      assert_traces([/#depth:0  #<RuntimeError: boom> at .*foo.rb:3/], out)
     end
   end
 end

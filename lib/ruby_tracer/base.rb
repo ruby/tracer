@@ -70,10 +70,11 @@ module Tracer
       end
     end
 
-    def initialize(output: STDOUT, pattern: nil, colorize: nil)
+    def initialize(output: STDOUT, pattern: nil, colorize: nil, depth_offset: 0)
       @name = self.class.name
       @type = @name.sub(/Tracer\z/, "")
       @output = output
+      @depth_offset = depth_offset
       @colorize = colorize || colorizable?
 
       if pattern
