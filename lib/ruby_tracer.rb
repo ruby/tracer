@@ -28,3 +28,5 @@ module Tracer
 
   extend Helper
 end
+
+require_relative "ruby_tracer/irb"
