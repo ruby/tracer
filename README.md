@@ -1,14 +1,6 @@
 # ruby_tracer
 
-ruby_tracer is an extraction of [`ruby/debug`](https://github.com/ruby/debug)'s [powerful tracers](https://github.com/ruby/debug/blob/master/lib/debug/tracer.rb), with user-facing APIs and some improvements on accuracy.
-
-Its goal is to help users understand their Ruby programss activities by emitting useful trace information, such us:
-
-- How and where is the target object is being used (`ObjectTracer`)
-- What exceptions are raised during the execution (`ExceptionTracer`)
-- When method calls are being performed (`CallTracer`)
-- Line execution (`LineTracer`)
-
+ruby_tracer is an extraction of [`ruby/debug`](https://github.com/ruby/debug)'s [powerful tracers](https://github.com/ruby/debug/blob/master/lib/debug/tracer.rb), with user-facing APIs, IRB-integration, and improvements on accuracy.
 
 ## Installation
 
@@ -62,9 +54,54 @@ trace_call { ... } # trace method calls in the given block
 trace_exception { ... } # trace exceptions in the given block
 ```
 
+### IRB-integration
+
+Once required, `ruby_tracer` registers a few IRB commands to help you trace Ruby expressions:
+
+```
+trace              Trace the target object (or self) in the given expression. Usage: `trace [target,] <expression>`
+trace_call         Trace method calls in the given expression. Usage: `trace_call <expression>`
+trace_exception    Trace exceptions in the given expression. Usage: `trace_exception <expression>`
+```
+
+**Example**
+
+```rb
+# test.rb
+require "ruby_tracer"
+
+obj = Object.new
+
+def obj.foo
+  100
+end
+
+def bar(obj)
+  obj.foo
+end
+
+binding.irb
+```
+
+
+```
+irb(main):001:0> trace obj, bar(obj)
+ #depth:23 #<Object:0x0000000107a86648> is used as a parameter obj of Object#bar at (eval):1:in `<main>'
+ #depth:24 #<Object:0x0000000107a86648> receives .foo at test.rb:10:in `bar'
+=> 100
+irb(main):002:0> trace_call bar(obj)
+ #depth:23>                            Object#bar at (eval):1:in `<main>'
+ #depth:24>                             #<Object:0x0000000107a86648>.foo at test.rb:10:in `bar'
+ #depth:24<                             #<Object:0x0000000107a86648>.foo #=> 100 at test.rb:10:in `bar'
+ #depth:23<                            Object#bar #=> 100 at (eval):1:in `<main>'
+=> 100
+```
+
+### Tracer Classes
+
 If you want to have more control over individual traces, you can use individual tracer classes:
 
-### ObjectTracer
+#### ObjectTracer
 
 ```rb
 class User
@@ -89,7 +126,7 @@ end
  #depth:4  #<User:0x000000010696cad8 @name="John"> receives #name (User#name) at test.rb:8:in `authorized?'
 ```
 
-### ExceptionTracer
+#### ExceptionTracer
 
 ```rb
 ExceptionTracer.new.start
@@ -103,7 +140,7 @@ end
  #depth:1  #<RuntimeError: boom> at test.rb:4
 ```
 
-### CallTracer
+#### CallTracer
 
 ```rb
 class User
@@ -135,7 +172,7 @@ end
  #depth:4 <    block #=> true at test.rb:16
 ```
 
-### LineTracer
+#### LineTracer
 
 ```rb
 class User
