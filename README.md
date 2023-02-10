@@ -24,6 +24,39 @@ $ gem install ruby_tracer
 
 ## Usage
 
+### `ruby_tracer/helper`
+
+This gem tries to provide the simpliest APIs for tracing, such us:
+
+- `trace(object) { ... }`
+- `trace_call { ... }`
+- `trace_exception { ... }`
+
+You can access the through `require "ruby_tracer/helper"`:
+
+```rb
+require "ruby_tracer/helper"
+
+obj = Object.new
+
+def obj.foo
+  100
+end
+
+def bar(obj)
+  obj.foo
+end
+
+trace(obj) do
+  bar(obj)
+end
+
+ #depth:1  #<Object:0x00000001061cfbe0> is used as a parameter obj of Object#bar at test.rb:13:in `block in <main>'
+ #depth:2  #<Object:0x00000001061cfbe0> receives .foo at test.rb:10:in `bar'
+```
+
+If you don't want to pollute the top-level namespace, or want to have more control over individual traces, you can use individual tracer classes:
+
 ### ObjectTracer
 
 ```rb
@@ -119,6 +152,10 @@ end
  #depth:4  at test.rb:15
  #depth:5  at test.rb:8
 ```
+
+## Customization
+
+TBD
 
 ## Acknowledgement
 

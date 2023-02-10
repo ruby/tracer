@@ -7,11 +7,12 @@ class CallTracer < Tracer::Base
     TracePoint.new(:a_call, :a_return) do |tp|
       next if skip?(tp)
 
+      location = caller_locations(2, 1).first
+      next if location.to_s.match?(/<internal:/)
+
       depth = caller.size
-      internal_depth = 2
 
       call_identifier_str = (tp.defined_class ? minfo(tp) : "block")
-
       call_identifier_str = colorize_blue(call_identifier_str)
 
       case tp.event
@@ -21,7 +22,7 @@ class CallTracer < Tracer::Base
         out tp,
             ">#{sp}#{call_identifier_str}",
             depth: depth - 2 - @depth_offset,
-            location: caller_locations(internal_depth, 1).first
+            location: location
       when :return, :c_return, :b_return
         depth += 1 if tp.event == :c_return
         sp = " " * depth
@@ -29,7 +30,7 @@ class CallTracer < Tracer::Base
         out tp,
             "<#{sp}#{call_identifier_str} #=> #{return_str}",
             depth: depth - 2 - @depth_offset,
-            location: caller_locations(internal_depth, 1).first
+            location: location
       end
     end
   end

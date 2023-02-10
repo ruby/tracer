@@ -65,7 +65,7 @@ class ObjectTracer < Tracer::Base
         out tp,
             " #{colorized_target_label} receives #{colorize_blue(method_info)}",
             location: caller_locations(internal_depth, 1).first,
-            depth: caller.size - internal_depth
+            depth: caller.size - internal_depth - @depth_offset
       elsif !tp.parameters.empty?
         b = tp.binding
         method_info = colorize_blue(minfo(tp))
@@ -82,7 +82,7 @@ class ObjectTracer < Tracer::Base
               out tp,
                   " #{colorized_target_label} is used as a parameter #{colorized_name} of #{method_info}",
                   location: caller_locations(internal_depth, 1).first,
-                  depth: caller.size - internal_depth
+                  depth: caller.size - internal_depth - @depth_offset
             end
           when :rest
             next if name == :"*"
@@ -94,7 +94,7 @@ class ObjectTracer < Tracer::Base
                 out tp,
                     " #{colorized_target_label} is used as a parameter in #{colorized_name} of #{method_info}",
                     location: caller_locations(internal_depth, 1).first,
-                    depth: caller.size - internal_depth
+                    depth: caller.size - internal_depth - @depth_offset
               end
             end
           when :keyrest
@@ -106,7 +106,7 @@ class ObjectTracer < Tracer::Base
                 out tp,
                     " #{colorized_target_label} is used as a parameter in #{colorized_name} of #{method_info}",
                     location: caller_locations(internal_depth, 1).first,
-                    depth: caller.size - internal_depth
+                    depth: caller.size - internal_depth - @depth_offset
               end
             end
           end
