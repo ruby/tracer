@@ -183,7 +183,11 @@ module Tracer
 
     def test_object_tracer_works_with_basic_object
       file = write_file("foo.rb", <<~RUBY)
-        obj = BasicObject.new
+        class Foo < BasicObject
+          def baz; end
+        end
+
+        obj = Foo.new
 
         def obj.foo
           100
@@ -196,6 +200,7 @@ module Tracer
         ObjectTracer.new(obj).start
 
         bar(obj)
+        obj.baz
       RUBY
 
       out, err = execute_file(file)
@@ -203,8 +208,9 @@ module Tracer
       assert_empty(err)
       assert_traces(
         [
-          %r{#depth:0  #<BasicObject.* does not have #inspect> is used as a parameter obj of Object#bar at .*/foo\.rb:13},
-          %r{#depth:1  #<BasicObject.* does not have #inspect> receives \.foo at .*/foo\.rb:8}
+          %r{#depth:0  #<Foo.* does not have #inspect> is used as a parameter obj of Object#bar at .*/foo\.rb:17},
+          %r{#depth:1  #<Foo.* does not have #inspect> receives \.foo at .*/foo\.rb:12},
+          %r{#depth:0  #<Foo.* does not have #inspect> receives #baz \(Foo#baz\) at .*/foo\.rb:18}
         ],
         out
       )
