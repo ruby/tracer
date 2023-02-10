@@ -7,8 +7,8 @@ class CallTracer < Tracer::Base
     TracePoint.new(:a_call, :a_return) do |tp|
       next if skip?(tp)
 
-      location = caller_locations(2, 1).first
-      next if location.to_s.match?(/<internal:/)
+      location = caller_locations(2, 1).first.to_s
+      next if location.match?(DIR) || location.match?(/<internal:/)
 
       depth = caller.size
 
