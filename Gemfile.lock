@@ -1,7 +1,8 @@
 PATH
   remote: .
   specs:
-    ruby_tracer (0.3.0)
+    ruby_tracer (0.3.1)
+      irb (>= 1.6)
 
 GEM
   remote: https://rubygems.org/
