@@ -1,3 +1,4 @@
+require_relative "../tracer"
 require "irb/cmd/nop"
 require "irb"
 
@@ -46,6 +47,11 @@ module IRB
       description "Trace the target object (or self) in the given expression. Usage: `trace [target,] <expression>`"
 
       def execute(*args)
+        if args.empty?
+          puts "Please provide the expression to trace. Usage: `trace [target,] <expression>`"
+          return
+        end
+
         args = args.first.split(/,/, 2)
 
         case args.size
@@ -56,8 +62,13 @@ module IRB
           target = eval(args.first, irb_context.workspace.binding)
           expression = args.last
         else
-          raise ArgumentError,
-                "wrong number of arguments (given #{args.size}, expected 1..2)"
+          puts "Please provide the expression to trace. Usage: `trace [target,] <expression>`"
+          return
+        end
+
+        unless expression
+          puts "Please provide the expression to trace. Usage: `trace [target,] <expression>`"
+          return
         end
 
         b = irb_context.workspace.binding
@@ -69,7 +80,14 @@ module IRB
       category "Tracing"
       description "Trace method calls in the given expression. Usage: `trace_call <expression>`"
 
-      def execute(expression)
+      def execute(*args)
+        expression = args.first
+
+        unless expression
+          puts "Please provide the expression to trace. Usage: `trace_call <expression>`"
+          return
+        end
+
         b = irb_context.workspace.binding
         Tracer.trace_call { eval(expression, b) }
       end
@@ -79,7 +97,14 @@ module IRB
       category "Tracing"
       description "Trace exceptions in the given expression. Usage: `trace_exception <expression>`"
 
-      def execute(expression)
+      def execute(*args)
+        expression = args.first
+
+        unless expression
+          puts "Please provide the expression to trace. Usage: `trace_exception <expression>`"
+          return
+        end
+
         b = irb_context.workspace.binding
         Tracer.trace_exception { eval(expression, b) }
       end
