@@ -1,6 +1,6 @@
 # Tracer
 
-Tracer is an extraction of [`ruby/debug`](https://github.com/ruby/debug)'s [powerful tracers](https://github.com/ruby/debug/blob/master/lib/debug/tracer.rb), with user-facing APIs, IRB-integration, and improvements on accuracy.
+Tracer is an extraction of [`ruby/debug`](https://github.com/ruby/debug)'s [powerful tracers](https://github.com/ruby/debug/blob/master/lib/debug/tracer.rb), with user-facing APIs, IRB-integration, and some improvements.
 
 ## Installation
 
@@ -217,7 +217,7 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/ruby/t
 
 ## License
 
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+The gem is available as open source under the terms of the [2-Clause BSD License](https://opensource.org/licenses/BSD-2-Clause).
 
 ## Code of Conduct
 
