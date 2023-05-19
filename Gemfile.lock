@@ -1,8 +1,7 @@
 PATH
   remote: .
   specs:
-    ruby_tracer (0.3.1)
-      irb (>= 1.6)
+    tracer (0.3.1)
 
 GEM
   remote: https://rubygems.org/
@@ -28,14 +27,15 @@ GEM
 
 PLATFORMS
   arm64-darwin-21
+  arm64-darwin-22
   x86_64-linux
 
 DEPENDENCIES
   irb
   rake (~> 13.0)
   ruby-lsp
-  ruby_tracer!
   test-unit (~> 3.0)
+  tracer!
 
 BUNDLED WITH
    2.4.2

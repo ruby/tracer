@@ -1,3 +1,3 @@
-require "ruby_tracer"
+require "tracer"
 
 Object.include(Tracer::Helper)

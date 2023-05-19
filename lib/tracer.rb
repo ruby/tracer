@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require_relative "ruby_tracer/version"
-require_relative "ruby_tracer/line_tracer"
-require_relative "ruby_tracer/call_tracer"
-require_relative "ruby_tracer/exception_tracer"
-require_relative "ruby_tracer/object_tracer"
+require_relative "tracer/version"
+require_relative "tracer/line_tracer"
+require_relative "tracer/call_tracer"
+require_relative "tracer/exception_tracer"
+require_relative "tracer/object_tracer"
 
 module Tracer
   module Helper
@@ -29,4 +29,4 @@ module Tracer
   extend Helper
 end
 
-require_relative "ruby_tracer/irb"
+require_relative "tracer/irb"

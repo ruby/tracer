@@ -4,7 +4,7 @@ module Tracer
   class HelperIntegrationTest < IntegrationTestCase
     def test_trace_exception
       file = write_file("foo.rb", <<~RUBY)
-        require "ruby_tracer/helper"
+        require "tracer/helper"
 
         trace_exception do
           raise "boom" rescue nil
@@ -19,7 +19,7 @@ module Tracer
 
     def test_trace_call
       file = write_file("foo.rb", <<~RUBY)
-        require "ruby_tracer/helper"
+        require "tracer/helper"
 
         obj = Object.new
 
@@ -52,7 +52,7 @@ module Tracer
 
     def test_trace
       file = write_file("foo.rb", <<~RUBY)
-        require "ruby_tracer/helper"
+        require "tracer/helper"
 
         obj = Object.new
 

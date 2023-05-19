@@ -8,7 +8,7 @@ require "tmpdir"
 
 require_relative "lib/envutil"
 
-require "ruby_tracer"
+require "tracer"
 
 module Tracer
   class TestCase < Test::Unit::TestCase
@@ -51,7 +51,7 @@ module Tracer
     end
 
     def execute_file(file)
-      cmd = [EnvUtil.rubybin, "-I", LIB, "-rruby_tracer", file.to_path]
+      cmd = [EnvUtil.rubybin, "-I", LIB, "-rtracer", file.to_path]
 
       stdout, stderr, status = Open3.capture3(*cmd, chdir: @dir)
 

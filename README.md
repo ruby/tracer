@@ -1,17 +1,17 @@
-# ruby_tracer
+# Tracer
 
-ruby_tracer is an extraction of [`ruby/debug`](https://github.com/ruby/debug)'s [powerful tracers](https://github.com/ruby/debug/blob/master/lib/debug/tracer.rb), with user-facing APIs, IRB-integration, and improvements on accuracy.
+Tracer is an extraction of [`ruby/debug`](https://github.com/ruby/debug)'s [powerful tracers](https://github.com/ruby/debug/blob/master/lib/debug/tracer.rb), with user-facing APIs, IRB-integration, and improvements on accuracy.
 
 ## Installation
 
 ```shell
-$ bundle add ruby_tracer --group=development,test
+$ bundle add tracer --group=development,test
 ```
 
 If bundler is not being used to manage dependencies, install the gem by executing:
 
 ```shell
-$ gem install ruby_tracer
+$ gem install tracer
 ```
 
 ## Usage
@@ -25,7 +25,7 @@ Tracer.trace_exception { ... } # trace exceptions in the given block
 **Example**
 
 ```rb
-require "ruby_tracer"
+require "tracer"
 
 obj = Object.new
 
@@ -42,12 +42,12 @@ Tracer.trace(obj) { bar(obj) }
  #depth:2  #<Object:0x000000010903c190> receives .foo at test.rb:10:in `bar'
 ```
 
-### `ruby_tracer/helper`
+### `tracer/helper`
 
-If you want to avoid the `Tracer` namespace, you can do `require "ruby_tracer/helper"` instead:
+If you want to avoid the `Tracer` namespace, you can do `require "tracer/helper"` instead:
 
 ```rb
-require "ruby_tracer/helper"
+require "tracer/helper"
 
 trace(object) { ... } # trace object's activities in the given block
 trace_call { ... } # trace method calls in the given block
@@ -56,7 +56,7 @@ trace_exception { ... } # trace exceptions in the given block
 
 ### IRB-integration
 
-Once required, `ruby_tracer` registers a few IRB commands to help you trace Ruby expressions:
+Once required, `tracer` registers a few IRB commands to help you trace Ruby expressions:
 
 ```
 trace              Trace the target object (or self) in the given expression. Usage: `trace [target,] <expression>`
@@ -68,7 +68,7 @@ trace_exception    Trace exceptions in the given expression. Usage: `trace_excep
 
 ```rb
 # test.rb
-require "ruby_tracer"
+require "tracer"
 
 obj = Object.new
 
@@ -213,7 +213,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/st0012/ruby_tracer. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/st0012/ruby_tracer/blob/master/CODE_OF_CONDUCT.md).
+Bug reports and pull requests are welcome on GitHub at https://github.com/ruby/tracer. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/ruby/tracer/blob/master/CODE_OF_CONDUCT.md).
 
 ## License
 
@@ -221,4 +221,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Code of Conduct
 
-Everyone interacting in the Ruby::Tracer project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/st0012/ruby_tracer/blob/master/CODE_OF_CONDUCT.md).
+Everyone interacting in the Ruby::Tracer project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/ruby/tracer/blob/master/CODE_OF_CONDUCT.md).
