@@ -1,11 +1,31 @@
 # Tracer
 
-Tracer is an extraction of [`ruby/debug`](https://github.com/ruby/debug)'s [powerful tracers](https://github.com/ruby/debug/blob/master/lib/debug/tracer.rb), with user-facing APIs, IRB-integration, and some improvements.
+[![Ruby](https://github.com/ruby/tracer/actions/workflows/main.yml/badge.svg)](https://github.com/ruby/tracer/actions/workflows/main.yml)
+[![Gem Version](https://badge.fury.io/rb/tracer.svg)](https://badge.fury.io/rb/tracer)
+
+The `tracer` gem provides helpful tracing utilities to help users observe their program's runtime behaviour.
+
+The currently supported tracers are:
+
+- [`ObjectTracer`](#objecttracer)
+- [`CallTracer`](#calltracer)
+- [`ExceptionTracer`](#exceptiontracer)
+- [`LineTracer`](#linetracer)
+
+It also comes with experimental [IRB integration](#irb-integration) to allow quick access from REPL.
 
 ## Installation
 
 ```shell
 $ bundle add tracer --group=development,test
+```
+
+Or directly add it to your `Gemfile`
+
+```rb
+group :development, :test do
+  gem "tracer"
+end
 ```
 
 If bundler is not being used to manage dependencies, install the gem by executing:
@@ -52,49 +72,6 @@ require "tracer/helper"
 trace(object) { ... } # trace object's activities in the given block
 trace_call { ... } # trace method calls in the given block
 trace_exception { ... } # trace exceptions in the given block
-```
-
-### IRB-integration
-
-Once required, `tracer` registers a few IRB commands to help you trace Ruby expressions:
-
-```
-trace              Trace the target object (or self) in the given expression. Usage: `trace [target,] <expression>`
-trace_call         Trace method calls in the given expression. Usage: `trace_call <expression>`
-trace_exception    Trace exceptions in the given expression. Usage: `trace_exception <expression>`
-```
-
-**Example**
-
-```rb
-# test.rb
-require "tracer"
-
-obj = Object.new
-
-def obj.foo
-  100
-end
-
-def bar(obj)
-  obj.foo
-end
-
-binding.irb
-```
-
-
-```
-irb(main):001:0> trace obj, bar(obj)
- #depth:23 #<Object:0x0000000107a86648> is used as a parameter obj of Object#bar at (eval):1:in `<main>'
- #depth:24 #<Object:0x0000000107a86648> receives .foo at test.rb:10:in `bar'
-=> 100
-irb(main):002:0> trace_call bar(obj)
- #depth:23>                            Object#bar at (eval):1:in `<main>'
- #depth:24>                             #<Object:0x0000000107a86648>.foo at test.rb:10:in `bar'
- #depth:24<                             #<Object:0x0000000107a86648>.foo #=> 100 at test.rb:10:in `bar'
- #depth:23<                            Object#bar #=> 100 at (eval):1:in `<main>'
-=> 100
 ```
 
 ### Tracer Classes
@@ -197,13 +174,56 @@ end
  #depth:5  at test.rb:8
 ```
 
+### IRB-integration
+
+Once required, `tracer` registers a few IRB commands to help you trace Ruby expressions:
+
+```
+trace              Trace the target object (or self) in the given expression. Usage: `trace [target,] <expression>`
+trace_call         Trace method calls in the given expression. Usage: `trace_call <expression>`
+trace_exception    Trace exceptions in the given expression. Usage: `trace_exception <expression>`
+```
+
+**Example**
+
+```rb
+# test.rb
+require "tracer"
+
+obj = Object.new
+
+def obj.foo
+  100
+end
+
+def bar(obj)
+  obj.foo
+end
+
+binding.irb
+```
+
+```shell
+irb(main):001:0> trace obj, bar(obj)
+ #depth:23 #<Object:0x0000000107a86648> is used as a parameter obj of Object#bar at (eval):1:in `<main>'
+ #depth:24 #<Object:0x0000000107a86648> receives .foo at test.rb:10:in `bar'
+=> 100
+irb(main):002:0> trace_call bar(obj)
+ #depth:23>                            Object#bar at (eval):1:in `<main>'
+ #depth:24>                             #<Object:0x0000000107a86648>.foo at test.rb:10:in `bar'
+ #depth:24<                             #<Object:0x0000000107a86648>.foo #=> 100 at test.rb:10:in `bar'
+ #depth:23<                            Object#bar #=> 100 at (eval):1:in `<main>'
+=> 100
+```
+
 ## Customization
 
 TBD
 
-## Acknowledgement
+## Acknowledgements
 
-[@ko1](https://github.com/ko1) (Koichi Sasada) implemented the majority of [`ruby/debug`](https://github.com/ruby/debug), including its tracers. So this project wouldn't exist without his amazing work there.
+A big shout-out to [@ko1](https://github.com/ko1) (Koichi Sasada) for his awesome work on [`ruby/debug`](https://github.com/ruby/debug).
+The [cool tracers in `ruby/debug`](https://github.com/ruby/debug/blob/master/lib/debug/tracer.rb) were an inspiration and laid the groundwork for this project.
 
 ## Development
 
