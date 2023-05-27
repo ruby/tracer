@@ -9,5 +9,3 @@ gem "rake", "~> 13.0"
 gem "irb"
 
 gem "test-unit", "~> 3.0"
-
-gem "ruby-lsp"
