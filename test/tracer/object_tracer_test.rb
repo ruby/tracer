@@ -50,8 +50,37 @@ module Tracer
       assert_empty(err)
       assert_traces(
         [
-          %r{#depth:0  #<Object:.*> is used as a parameter obj of Object#bar at .*/foo\.rb:13},
-          %r{#depth:1  #<Object:.*> receives \.foo at .*/foo\.rb:8}
+          %r{^#depth:0  #<Object:.*> is used as a parameter obj of Object#bar at .*/foo\.rb:13},
+          %r{^#depth:1  #<Object:.*> receives \.foo at .*/foo\.rb:8}
+        ],
+        out
+      )
+    end
+
+    def test_object_tracer_with_header
+      file = write_file("foo.rb", <<~RUBY)
+        obj = Object.new
+
+        def obj.foo
+          100
+        end
+
+        def bar(obj)
+          obj.foo
+        end
+
+        ObjectTracer.new(obj, header: "tracer-1").start
+
+        bar(obj)
+      RUBY
+
+      out, err = execute_file(file)
+
+      assert_empty(err)
+      assert_traces(
+        [
+          %r{tracer-1 #depth:0  #<Object:.*> is used as a parameter obj of Object#bar at .*/foo\.rb:13},
+          %r{tracer-1 #depth:1  #<Object:.*> receives \.foo at .*/foo\.rb:8}
         ],
         out
       )
@@ -78,8 +107,8 @@ module Tracer
       assert_empty(err)
       assert_traces(
         [
-          %r{#depth:0  #<Object:.*> is used as a parameter in args of Object#foo at .*/foo\.rb:11},
-          %r{#depth:0  #<Object:.*> is used as a parameter in kwargs of Object#bar at .*/foo\.rb:12}
+          %r{^#depth:0  #<Object:.*> is used as a parameter in args of Object#foo at .*/foo\.rb:11},
+          %r{^#depth:0  #<Object:.*> is used as a parameter in kwargs of Object#bar at .*/foo\.rb:12}
         ],
         out
       )
@@ -108,9 +137,9 @@ module Tracer
       assert_empty(err)
       assert_traces(
         [
-          %r{#depth:0  #<Object:.*> is used as a parameter in args of Object#foo at .*/foo\.rb:12},
-          %r{#depth:1  #<Object:.*> is used as a parameter obj of block{} at .*/foo\.rb:4},
-          %r{#depth:2  #<Object:.*> is used as a parameter in kwargs of Object#bar at .*/foo\.rb:13}
+          %r{^#depth:0  #<Object:.*> is used as a parameter in args of Object#foo at .*/foo\.rb:12},
+          %r{^#depth:1  #<Object:.*> is used as a parameter obj of block{} at .*/foo\.rb:4},
+          %r{^#depth:2  #<Object:.*> is used as a parameter in kwargs of Object#bar at .*/foo\.rb:13}
         ],
         out
       )
@@ -138,8 +167,8 @@ module Tracer
       assert_empty(err)
       assert_traces(
         [
-          %r{#depth:0  #<Object:.*> is used as a parameter obj of Object#bar at .*/foo\.rb:13},
-          %r{#depth:1  #<Object:.*> receives \.foo at .*/foo\.rb:8}
+          %r{^#depth:0  #<Object:.*> is used as a parameter obj of Object#bar at .*/foo\.rb:13},
+          %r{^#depth:1  #<Object:.*> receives \.foo at .*/foo\.rb:8}
         ],
         out
       )
@@ -174,8 +203,8 @@ module Tracer
       assert_empty(err)
       assert_traces(
         [
-          /#depth:-1 #<Object:.*> receives #instance_eval \(BasicObject#instance_eval\) at .*foo\.rb:4/,
-          /#depth:1  #<Object:.*> receives <eval or exec with &block> at .*foo.rb:4:in `instance_eval'/
+          /^#depth:-1 #<Object:.*> receives #instance_eval \(BasicObject#instance_eval\) at .*foo\.rb:4/,
+          /^#depth:1  #<Object:.*> receives <eval or exec with &block> at .*foo.rb:4:in `instance_eval'/
         ],
         out
       )
@@ -208,9 +237,9 @@ module Tracer
       assert_empty(err)
       assert_traces(
         [
-          %r{#depth:0  #<Foo.* does not have #inspect> is used as a parameter obj of Object#bar at .*/foo\.rb:17},
-          %r{#depth:1  #<Foo.* does not have #inspect> receives \.foo at .*/foo\.rb:12},
-          %r{#depth:0  #<Foo.* does not have #inspect> receives #baz \(Foo#baz\) at .*/foo\.rb:18}
+          %r{^#depth:0  #<Foo.* does not have #inspect> is used as a parameter obj of Object#bar at .*/foo\.rb:17},
+          %r{^#depth:1  #<Foo.* does not have #inspect> receives \.foo at .*/foo\.rb:12},
+          %r{^#depth:0  #<Foo.* does not have #inspect> receives #baz \(Foo#baz\) at .*/foo\.rb:18}
         ],
         out
       )
