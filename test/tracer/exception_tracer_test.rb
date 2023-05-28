@@ -22,7 +22,20 @@ module Tracer
       out, err = execute_file(file)
 
       assert_empty(err)
-      assert_traces([/#depth:0  #<RuntimeError: boom> at .*foo.rb:3/], out)
+      assert_traces([/^#depth:0  #<RuntimeError: boom> at .*foo.rb:3/], out)
+    end
+
+    def test_exception_tracer_with_header
+      file = write_file("foo.rb", <<~RUBY)
+        ExceptionTracer.new(header: "tracer-1").start
+
+        raise "boom" rescue nil
+      RUBY
+
+      out, err = execute_file(file)
+
+      assert_empty(err)
+      assert_traces([/^tracer-1 #depth:0  #<RuntimeError: boom> at .*foo.rb:3/], out)
     end
   end
 end

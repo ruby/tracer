@@ -70,12 +70,21 @@ module Tracer
       end
     end
 
-    def initialize(output: STDOUT, pattern: nil, colorize: nil, depth_offset: 0)
+    attr_reader :header
+
+    def initialize(
+      output: STDOUT,
+      pattern: nil,
+      colorize: nil,
+      depth_offset: 0,
+      header: nil
+    )
       @name = self.class.name
       @type = @name.sub(/Tracer\z/, "")
       @output = output
       @depth_offset = depth_offset
       @colorize = colorize || colorizable?
+      @header = header
 
       if pattern
         @pattern = Regexp.compile(pattern)
@@ -88,10 +97,6 @@ module Tracer
 
     def key
       [@type, @pattern, @into].freeze
-    end
-
-    def header
-      ""
     end
 
     def to_s
@@ -141,10 +146,14 @@ module Tracer
 
     def out(tp, msg = nil, depth: caller.size - 1, location: nil)
       location ||= "#{tp.path}:#{tp.lineno}"
-      buff =
-        "#{header} \#depth:#{"%-2d" % depth}#{msg} at #{colorize("#{location}", [:GREEN])}"
+      if header
+        str = +"#{header} "
+      else
+        str = +""
+      end
+      str << "\#depth:#{"%-2d" % depth}#{msg} at #{colorize("#{location}", [:GREEN])}"
 
-      puts buff
+      puts str
     end
 
     def puts(msg)
