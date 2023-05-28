@@ -1,4 +1,3 @@
-require_relative "../tracer"
 require "irb/cmd/nop"
 require "irb"
 
