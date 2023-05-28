@@ -1,6 +1,15 @@
 require "irb/cmd/nop"
 require "irb"
 
+if Gem::Version.new(IRB::VERSION) < Gem::Version.new("1.6.0")
+  warn <<~MSG
+    Your version of IRB is too old so Tracer cannot register its commands.
+    Please upgrade IRB by adding `gem "irb", "~> 1.6.0"` to your Gemfile.
+  MSG
+
+  return
+end
+
 module Tracer
   def self.register_irb_commands
     ec = IRB::ExtendCommandBundle.instance_variable_get(:@EXTEND_COMMANDS)
