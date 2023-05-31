@@ -10,6 +10,7 @@ module Tracer
     M_INSPECT = Object.instance_method(:inspect)
     M_CLASS = Object.instance_method(:class)
     M_IS_A = Object.instance_method(:is_a?)
+    M_INSTANCE_VARIABLE_GET = Object.instance_method(:instance_variable_get)
     HOME = ENV["HOME"] ? (ENV["HOME"] + "/") : nil
 
     include Color

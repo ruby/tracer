@@ -5,6 +5,7 @@ require_relative "tracer/line_tracer"
 require_relative "tracer/call_tracer"
 require_relative "tracer/exception_tracer"
 require_relative "tracer/object_tracer"
+require_relative "tracer/ivar_tracer"
 
 module Tracer
   module Helper

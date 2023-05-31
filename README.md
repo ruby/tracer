@@ -8,6 +8,7 @@ The `tracer` gem provides helpful tracing utilities to help users observe their 
 The currently supported tracers are:
 
 - [`ObjectTracer`](#objecttracer)
+- [`IvarTracer`](#ivartracer)
 - [`CallTracer`](#calltracer)
 - [`ExceptionTracer`](#exceptiontracer)
 - [`LineTracer`](#linetracer)
@@ -101,6 +102,30 @@ end
  #depth:3  #<User:0x000000010696cad8 @name="John"> receives #name (User#name) at test.rb:14:in `block in <main>'
  #depth:3  #<User:0x000000010696cad8 @name="John"> is used as a parameter user of Object#authorized? at test.rb:15:in `block in <main>'
  #depth:4  #<User:0x000000010696cad8 @name="John"> receives #name (User#name) at test.rb:8:in `authorized?'
+```
+
+#### IvarTracer
+
+> **Note**
+> Ruby 3.0 and below's accessor calls don't trigger TracePoint properly so the result may be inaccurate with those versions.
+
+```rb
+require "tracer"
+
+class Cat
+  attr_accessor :name
+end
+
+cat = Cat.new
+
+tracer = IvarTracer.new(cat, :@name)
+tracer.start do
+  cat.name = "Kitty"
+  cat.instance_variable_set(:@name, "Ketty")
+end
+
+#depth:3 Cat#name= sets @name = "Kitty" at test.rb:11
+#depth:3 Kernel#instance_variable_set sets @name = "Ketty" at test.rb:12
 ```
 
 #### ExceptionTracer
