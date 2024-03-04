@@ -204,7 +204,7 @@ module Tracer
       assert_traces(
         [
           /^#depth:-1 #<Object:.*> receives #instance_eval \(BasicObject#instance_eval\) at .*foo\.rb:4/,
-          /^#depth:1  #<Object:.*> receives <eval or exec with &block> at .*foo.rb:4:in `instance_eval'/
+          /^#depth:1  #<Object:.*> receives <eval or exec with &block> at .*foo.rb:4:in (?:`|'BasicObject#)instance_eval'/
         ],
         out
       )
