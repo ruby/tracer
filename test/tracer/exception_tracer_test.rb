@@ -16,26 +16,48 @@ module Tracer
       file = write_file("foo.rb", <<~RUBY)
         ExceptionTracer.new.start
 
-        raise "boom" rescue nil
+        begin
+          raise "boom"
+        rescue
+        end
       RUBY
 
       out, err = execute_file(file)
 
+      expected_traces = [
+        /^#depth:0  #<RuntimeError: boom> raised at .*foo.rb:4/
+      ]
+
+      if RUBY_VERSION >= "3.3.0"
+        expected_traces << /^#depth:1  #<RuntimeError: boom> rescued at .*foo.rb:5/
+      end
+
       assert_empty(err)
-      assert_traces([/^#depth:0  #<RuntimeError: boom> at .*foo.rb:3/], out)
+      assert_traces(expected_traces, out)
     end
 
     def test_exception_tracer_with_header
       file = write_file("foo.rb", <<~RUBY)
         ExceptionTracer.new(header: "tracer-1").start
 
-        raise "boom" rescue nil
+        begin
+          raise "boom"
+        rescue
+        end
       RUBY
 
       out, err = execute_file(file)
 
+      expected_traces = [
+        /^tracer-1 #depth:0  #<RuntimeError: boom> raised at .*foo.rb:4/
+      ]
+
+      if RUBY_VERSION >= "3.3.0"
+        expected_traces << /^tracer-1 #depth:1  #<RuntimeError: boom> rescued at .*foo.rb:5/
+      end
+
       assert_empty(err)
-      assert_traces([/^tracer-1 #depth:0  #<RuntimeError: boom> at .*foo.rb:3/], out)
+      assert_traces(expected_traces, out)
     end
   end
 end

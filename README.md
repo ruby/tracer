@@ -139,7 +139,8 @@ rescue StandardError
   nil
 end
 
- #depth:1  #<RuntimeError: boom> at test.rb:4
+#depth:0  #<RuntimeError: boom> raised at test.rb:4
+#depth:1  #<RuntimeError: boom> rescued at test.rb:6
 ```
 
 #### CallTracer

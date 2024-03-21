@@ -4,16 +4,32 @@ require_relative "base"
 
 class ExceptionTracer < Tracer::Base
   def setup_tp
-    TracePoint.new(:raise) do |tp|
-      next if skip?(tp)
+    if RUBY_VERSION >= "3.3.0"
+      TracePoint.new(:raise, :rescue) do |tp|
+        next if skip?(tp)
 
-      exc = tp.raised_exception
+        exc = tp.raised_exception
 
-      out tp,
-          " #{colorize_magenta(exc.inspect)}",
-          depth: caller.size - (1 + @depth_offset)
-    rescue Exception => e
-      p e
+        action = tp.event == :raise ? "raised" : "rescued"
+
+        out tp,
+            " #{colorize_magenta(exc.inspect)} #{action}",
+            depth: caller.size - (1 + @depth_offset)
+      rescue Exception => e
+        p e
+      end
+    else
+      TracePoint.new(:raise) do |tp|
+        next if skip?(tp)
+
+        exc = tp.raised_exception
+
+        out tp,
+            " #{colorize_magenta(exc.inspect)} raised",
+            depth: caller.size - (1 + @depth_offset)
+      rescue Exception => e
+        p e
+      end
     end
   end
 
