@@ -13,8 +13,16 @@ module Tracer
 
       out, err = execute_file(file)
 
+      expected_traces = [
+        /^#depth:1  #<RuntimeError: boom> raised at .*foo.rb:4/
+      ]
+
+      if RUBY_VERSION >= "3.3.0"
+        expected_traces << /^#depth:2  #<RuntimeError: boom> rescued at .*foo.rb:4/
+      end
+
       assert_empty(err)
-      assert_traces([/#depth:1  #<RuntimeError: boom> at .*foo.rb:4/], out)
+      assert_traces(expected_traces, out)
     end
 
     def test_trace_call
