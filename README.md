@@ -106,7 +106,7 @@ end
 
 #### IvarTracer
 
-> **Note**
+> [!Note]
 > Ruby 3.0 and below's accessor calls don't trigger TracePoint properly so the result may be inaccurate with those versions.
 
 ```rb
@@ -249,7 +249,7 @@ TBD
 ## Acknowledgements
 
 A big shout-out to [@ko1](https://github.com/ko1) (Koichi Sasada) for his awesome work on [`ruby/debug`](https://github.com/ruby/debug).
-The [cool tracers in `ruby/debug`](https://github.com/ruby/debug/blob/master/lib/debug/tracer.rb) were an inspiration and laid the groundwork for this project.
+The [tracers in `ruby/debug`](https://github.com/ruby/debug/blob/master/lib/debug/tracer.rb) were an inspiration and laid the groundwork for this project.
 
 ## Development
 
