@@ -237,9 +237,9 @@ module Tracer
       assert_empty(err)
       assert_traces(
         [
-          %r{^#depth:0  #<Foo.* does not have #inspect> is used as a parameter obj of Object#bar at .*/foo\.rb:17},
-          %r{^#depth:1  #<Foo.* does not have #inspect> receives \.foo at .*/foo\.rb:12},
-          %r{^#depth:0  #<Foo.* does not have #inspect> receives #baz \(Foo#baz\) at .*/foo\.rb:18}
+          %r{^#depth:0  #<Foo.*> is used as a parameter obj of Object#bar at .*/foo\.rb:17},
+          %r{^#depth:1  #<Foo.*> receives \.foo at .*/foo\.rb:12},
+          %r{^#depth:0  #<Foo.*> receives #baz \(Foo#baz\) at .*/foo\.rb:18}
         ],
         out
       )

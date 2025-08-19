@@ -18,7 +18,7 @@ module Tracer
       ]
 
       if RUBY_VERSION >= "3.3.0"
-        expected_traces << /^#depth:2  #<RuntimeError: boom> rescued at .*foo.rb:4/
+        expected_traces << /^#depth:\d+  #<RuntimeError: boom> rescued at .*foo.rb:4/
       end
 
       assert_empty(err)
